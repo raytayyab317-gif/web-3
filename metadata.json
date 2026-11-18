@@ -1,0 +1,6 @@
+{
+  "name": "ConstructEx — GTA Drywall & Project Workspace",
+  "description": "ConstructEx architectural drywall, framing, and Level-5 finishing platform featuring Local Storage project CRUD management and live GTA site weather via Axios.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
