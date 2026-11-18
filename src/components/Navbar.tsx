@@ -1,5 +1,15 @@
-import { useState } from 'react';
-import { Menu, X } from 'lucide-react';
+import { ComponentType, useState } from 'react';
+import {
+  CloudSun,
+  FolderKanban,
+  Home,
+  Info,
+  LogIn,
+  LogOut,
+  Mail,
+  Menu,
+  X,
+} from 'lucide-react';
 import { PageRoute, UserSession } from '../types/constructex';
 
 interface NavbarProps {
@@ -9,12 +19,16 @@ interface NavbarProps {
   onSignOut: () => void;
 }
 
-const NAV_ITEMS: { route: PageRoute; label: string }[] = [
-  { route: 'home', label: 'Home' },
-  { route: 'projects', label: 'Projects' },
-  { route: 'weather', label: 'Site Weather' },
-  { route: 'about', label: 'About' },
-  { route: 'contact', label: 'Contact' },
+const NAV_ITEMS: {
+  route: PageRoute;
+  label: string;
+  icon: ComponentType<{ className?: string }>;
+}[] = [
+  { route: 'home', label: 'Home', icon: Home },
+  { route: 'projects', label: 'Projects', icon: FolderKanban },
+  { route: 'weather', label: 'Site Weather', icon: CloudSun },
+  { route: 'about', label: 'About', icon: Info },
+  { route: 'contact', label: 'Contact', icon: Mail },
 ];
 
 export default function Navbar({
@@ -42,23 +56,25 @@ export default function Navbar({
           Construct<span className="text-[#7C3AED]">Ex</span>
         </button>
 
-        {/* Zone 2: 5 concise single-line navigation links */}
-        <nav aria-label="Primary navigation" className="hidden md:flex items-center gap-7">
+        {/* Zone 2: 5 concise single-line navigation tabs with icons */}
+        <nav aria-label="Primary navigation" className="hidden md:flex items-center gap-6">
           {NAV_ITEMS.map((item) => {
             const isActive = activeRoute === item.route;
+            const Icon = item.icon;
             return (
               <button
                 key={item.route}
                 type="button"
                 onClick={() => handleNav(item.route)}
                 aria-current={isActive ? 'page' : undefined}
-                className={`text-sm font-medium whitespace-nowrap shrink-0 py-1 border-b-2 transition-colors cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#7C3AED] ${
+                className={`inline-flex items-center gap-1.5 text-sm font-medium whitespace-nowrap shrink-0 py-1 border-b-2 transition-colors cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#7C3AED] ${
                   isActive
                     ? 'text-[#7C3AED] border-[#7C3AED] font-semibold'
                     : 'text-slate-600 border-transparent hover:text-slate-900 hover:border-slate-300'
                 }`}
               >
-                {item.label}
+                <Icon className="w-4 h-4 shrink-0" aria-hidden="true" />
+                <span>{item.label}</span>
               </button>
             );
           })}
@@ -70,18 +86,20 @@ export default function Navbar({
             <button
               type="button"
               onClick={onSignOut}
-              className="hidden md:inline-flex items-center px-4 py-2 rounded-lg text-sm font-semibold text-slate-900 bg-slate-100 hover:bg-slate-200 transition-colors whitespace-nowrap shrink-0 cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#7C3AED]"
+              className="hidden md:inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-semibold text-slate-900 bg-slate-100 hover:bg-slate-200 transition-colors whitespace-nowrap shrink-0 cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#7C3AED]"
               title={`Signed in as ${session.email}`}
             >
-              Sign Out ({session.fullName.split(' ')[0]})
+              <LogOut className="w-4 h-4 shrink-0" aria-hidden="true" />
+              <span>Sign Out ({session.fullName.split(' ')[0]})</span>
             </button>
           ) : (
             <button
               type="button"
               onClick={() => handleNav(activeRoute === 'signin' ? 'signup' : 'signin')}
-              className="hidden md:inline-flex items-center px-5 py-2 rounded-lg text-sm font-semibold text-white bg-[#7C3AED] hover:bg-[#6D28D9] transition-colors whitespace-nowrap shrink-0 cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#7C3AED]"
+              className="hidden md:inline-flex items-center gap-1.5 px-5 py-2 rounded-lg text-sm font-semibold text-white bg-[#7C3AED] hover:bg-[#6D28D9] transition-colors whitespace-nowrap shrink-0 cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#7C3AED]"
             >
-              {activeRoute === 'signin' ? 'Sign Up' : 'Sign In'}
+              <LogIn className="w-4 h-4 shrink-0" aria-hidden="true" />
+              <span>{activeRoute === 'signin' ? 'Sign Up' : 'Sign In'}</span>
             </button>
           )}
 
@@ -105,19 +123,21 @@ export default function Navbar({
         >
           {NAV_ITEMS.map((item) => {
             const isActive = activeRoute === item.route;
+            const Icon = item.icon;
             return (
               <button
                 key={item.route}
                 type="button"
                 onClick={() => handleNav(item.route)}
                 aria-current={isActive ? 'page' : undefined}
-                className={`block w-full text-left px-3 py-2.5 rounded-lg text-sm font-medium transition-colors cursor-pointer ${
+                className={`flex items-center gap-2.5 w-full text-left px-3 py-2.5 rounded-lg text-sm font-medium transition-colors cursor-pointer ${
                   isActive
                     ? 'bg-[#7C3AED]/10 text-[#7C3AED] font-semibold'
                     : 'text-slate-700 hover:bg-slate-50'
                 }`}
               >
-                {item.label}
+                <Icon className="w-4 h-4 shrink-0" aria-hidden="true" />
+                <span>{item.label}</span>
               </button>
             );
           })}
@@ -129,18 +149,20 @@ export default function Navbar({
                   setMobileMenuOpen(false);
                   onSignOut();
                 }}
-                className="w-full px-4 py-2.5 rounded-lg text-sm font-semibold text-slate-900 bg-slate-100 hover:bg-slate-200 text-left cursor-pointer"
+                className="flex items-center gap-2 w-full px-4 py-2.5 rounded-lg text-sm font-semibold text-slate-900 bg-slate-100 hover:bg-slate-200 text-left cursor-pointer"
               >
-                Sign Out ({session.fullName})
+                <LogOut className="w-4 h-4 shrink-0" aria-hidden="true" />
+                <span>Sign Out ({session.fullName})</span>
               </button>
             ) : (
               <div className="grid grid-cols-2 gap-2">
                 <button
                   type="button"
                   onClick={() => handleNav('signin')}
-                  className="px-4 py-2.5 rounded-lg text-sm font-semibold text-slate-700 border border-slate-200 hover:bg-slate-50 cursor-pointer"
+                  className="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-lg text-sm font-semibold text-slate-700 border border-slate-200 hover:bg-slate-50 cursor-pointer"
                 >
-                  Sign In
+                  <LogIn className="w-4 h-4 shrink-0" aria-hidden="true" />
+                  <span>Sign In</span>
                 </button>
                 <button
                   type="button"
